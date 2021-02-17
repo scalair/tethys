@@ -1,0 +1,41 @@
+galaxy_info:
+  role_name: tethys
+  author: xat
+  description: Ansible role that creates monitoring stack with Prometheus, Grafana and AlertManager, based on federated Prometheuses
+  company: Scalair
+
+  license: Apache
+  min_ansible_version: 2.10
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - bionic
+    - xenial
+  - name: Debian
+    versions:
+    - stretch
+    - buster
+  - name: EL
+    versions:
+    - 7
+    - 8
+  - name: Fedora
+    versions:
+    - 30
+    - 31
+
+  galaxy_tags:
+  - prometheus
+  - grafana
+  - alertmanager
+  - monitoring
+  - metrics
+  - dashboards
+  - alerts
+  - federation
+
+  dependencies:
+  - cloudalchemy.prometheus
+  - cloudalchemy.grafana
+  - cloudalchemy.alertmanager

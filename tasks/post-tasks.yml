@@ -1,0 +1,5 @@
+---
+- name: post-flight| delete temporary directory
+  file:
+    path: "{{ tmpdir.path }}"
+    state: absent

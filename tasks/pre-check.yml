@@ -1,0 +1,17 @@
+---
+- name: pre-check| clients list is empty
+  fail:
+    msg: "clients list is empty, please check configuration..."
+  when: clients | length == 0
+
+- name: pre-check| prometheus_federation list is empty
+  fail:
+    msg: "prometheus_federation list is empty for {{ item.name }}. Cannot federate empty server."
+  loop: "{{ clients }}"
+  when: item.prometheus_federation | length == 0
+
+- name: pre-check| products list is empty
+  fail:
+    msg: "products list is empty for {{ item.name }}."
+  loop: "{{ clients }}"
+  when: item.products | length == 0

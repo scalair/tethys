@@ -1,0 +1,35 @@
+---
+- name: Pre-processing checks
+  include_tasks: pre-check.yml
+
+- name: Pre-processing tasks
+  include_tasks: pre-tasks.yml
+
+# - name: Install Prometheus Federation server
+#   include_role:
+#     name: cloudalchemy.prometheus
+
+- name: Install Grafana
+  include_role:
+    name: cloudalchemy.grafana
+  vars:
+    grafana_security:
+      admin_user: admin
+      admin_password: admin
+    grafana_datasources:
+    - name: Prometheus
+      type: prometheus
+      access: proxy
+      url: 'http://localhost:9090'
+      basicAuth: false
+      default: true
+    grafana_dashboards_dir: "{{ tmpdir.path }}"
+    grafana_provisioning_synced: true
+
+# - name: Install AlertManager
+#   include_role:
+#     name: cloudalchemy.alertmanager
+
+# UNCOMMENT FOR PROD READY
+# - name: Post-processing tasks
+#   include_tasks: post-tasks.yml

@@ -1,0 +1,53 @@
+---
+- name: debug
+  debug:
+    msg: "{{ clusterID.name }}"
+  when:
+  - "'kubernetes' in client.products"
+  - "clusterID.kubernetes_hosted"
+  loop: "{{ client.prometheus_federation }}"
+  loop_control:
+    loop_var: clusterID
+
+# - name: fail force
+#   fail:
+#     msg: "fail force"
+
+- name: generate-dashboards| node
+  template:
+    src: dashboards/node.json.j2
+    dest: "{{ tmpdir.path }}/{{ client.name }}-node.json"
+  when: "'node' in client.products"
+
+- name: generate-dashboards| elasticsearch
+  template:
+    src: dashboards/elasticsearch.json.j2
+    dest: "{{ tmpdir.path }}/{{ client.name }}-elasticsearch.json"
+  when: "'elasticsearch' in client.products"
+
+- name: generate-dashboards| kubernetes overview
+  template:
+    src: dashboards/kubernetes-overview.json.j2
+    dest: "{{ tmpdir.path }}/{{ client.name }}-{{ clusterID.name }}-kubernetes-overview.json"
+  when:
+  - "'kubernetes' in client.products"
+  - "clusterID.kubernetes_hosted"
+  loop: "{{ client.prometheus_federation }}"
+  loop_control:
+    loop_var: clusterID
+
+- name: generate-dashboards| kubernetes detailed
+  template:
+    src: dashboards/kubernetes-detailed.json.j2
+    dest: "{{ tmpdir.path }}/{{ client.name }}-{{ clusterID.name }}-kubernetes-detailed.json"
+  when:
+  - "'kubernetes' in client.products"
+  - "clusterID.kubernetes_hosted"
+  loop: "{{ client.prometheus_federation }}"
+  loop_control:
+    loop_var: clusterID
+
+
+- name: show tmpdir
+  debug:
+    var: tmpdir.path
