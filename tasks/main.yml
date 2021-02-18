@@ -5,9 +5,8 @@
 - name: Pre-processing tasks
   include_tasks: pre-tasks.yml
 
-# - name: Install Prometheus Federation server
-#   include_role:
-#     name: cloudalchemy.prometheus
+- name: Install Prometheus Federation server
+  include_tasks: "{{ tmpdir.path }}/prometheus-playbook.yml"
 
 - name: Install Grafana
   include_role:

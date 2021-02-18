@@ -1,11 +1,11 @@
 ---
-- name: pre-check| create temporary directory
+- name: pre-tasks| create temporary directory
   tempfile:
     state: directory
   register: tmpdir
   delegate_to: localhost
 
-- name: Generate Grafana dashboards from templates
+- name: pre-tasks| generate Grafana dashboards from templates
   include_tasks: 
     file: generate-dashboards.yml
     apply:
@@ -13,3 +13,9 @@
   loop: "{{ clients }}"
   loop_control:
     loop_var: client
+
+- name: pre-tasks| generating Prometheus playbook
+  template:
+    src: prometheus/playbook.yml.j2
+    dest: "{{ tmpdir.path }}/prometheus-playbook.yml"
+  delegate_to: localhost

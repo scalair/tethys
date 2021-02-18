@@ -1,0 +1,65 @@
+---
+- name: Install Prometheus Federation server
+  include_role:
+    name: cloudalchemy.prometheus
+  vars:
+    prometheus_alertmanager_config:
+    - scheme: http
+      path_prefix: /
+      static_configs:
+      - targets: ["127.0.0.1:9093"]         # VALUE MUST BE RETRIEVED
+    prometheus_scrape_configs:
+    - job_name: 'prometheus'
+      static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          prometheusID: main
+{% for client in clients %}
+    - job_name: "{{ client.name }}"
+      scrape_interval: 60s
+      honor_labels: true
+      metrics_path: '/federate'
+{% if client.products|length > 0 %}
+      params:
+        'match[]':
+{% if 'node' in client.products %}
+        - '{job="node-exporter"}'
+{% endif %}
+{% if 'kubernetes' in client.products %}
+        - '{job="kubernetes-service-endpoints"}'
+        - '{job="kubernetes-nodes-cadvisor"}'
+{% endif %}
+{% if 'elasticsearch' in client.products %}
+        - '{job="elasticsearch-exporter"}'
+{% endif %}
+{% else %}
+      params:
+        'match[]':
+        - '{job=~".+"}'
+{% endif %}
+      static_configs:
+{% for prometheus in client.prometheus_federation %}
+      - targets:
+        - "{{ prometheus.endpoint }}"
+        labels:
+          clusterID: "{{ prometheus.name }}"
+          clientID: "{{ client.name }}"
+{% endfor %}
+{% if 'kubernetes' in client.products or 'node' in client.products %}
+      metric_relabel_configs:
+{% if 'node' in client.products %}
+      - source_labels: [ job,kubernetes_name ]
+        target_label: job
+        regex: '^kubernetes-service-endpoints;prometheus-node-exporter$'
+        action: replace
+        replacement: node-exporter
+{% endif %}
+{% if 'kubernetes' in client.products %}
+      - source_labels: [ job,kubernetes_name ]
+        target_label: job
+        regex: '^kubernetes-service-endpoints;prometheus-kube-state-metrics$'
+        action: replace
+        replacement: kube-state-metrics
+{% endif %}
+{% endif %}
+{% endfor %}

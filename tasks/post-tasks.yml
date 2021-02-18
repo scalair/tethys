@@ -1,5 +1,6 @@
 ---
-- name: post-flight| delete temporary directory
+- name: post-tasks| delete temporary directory
   file:
     path: "{{ tmpdir.path }}"
     state: absent
+  delegate_to: localhost
