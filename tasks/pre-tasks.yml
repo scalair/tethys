@@ -5,6 +5,18 @@
   register: tmpdir
   delegate_to: localhost
 
+- name: pre-tasks| create temporary Grafana directory
+  file:
+    path: "{{ tmpdir.path }}/grafana"
+    state: directory
+  delegate_to: localhost
+
+- name: pre-tasks| create temporary Prometheus directory
+  file:
+    path: "{{ tmpdir.path }}/prometheus"
+    state: directory
+  delegate_to: localhost
+
 - name: pre-tasks| generate Grafana dashboards from templates
   include_tasks: 
     file: generate-dashboards.yml
@@ -17,5 +29,5 @@
 - name: pre-tasks| generating Prometheus playbook
   template:
     src: prometheus/playbook.yml.j2
-    dest: "{{ tmpdir.path }}/prometheus-playbook.yml"
+    dest: "{{ tmpdir.path }}/prometheus/prometheus-playbook.yml"
   delegate_to: localhost
