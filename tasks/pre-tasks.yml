@@ -26,6 +26,15 @@
   loop_control:
     loop_var: client
 
+- name: pre-tasks| generate Prometheus rules from templates
+  include_tasks:
+    file: generate-rules.yml
+    apply:
+      delegate_to: localhost
+  loop: "{{ clients }}"
+  loop_control:
+    loop_var: client
+
 - name: pre-tasks| generating Prometheus playbook
   template:
     src: prometheus/playbook.yml.j2

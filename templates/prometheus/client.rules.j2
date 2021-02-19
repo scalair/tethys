@@ -1,0 +1,174 @@
+groups:
+- name: "{{ client.name }}"
+{% if 'node' in client.products %}
+  rules:
+  - alert: InstanceDown
+    annotations:
+      description: '{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has been down for
+        more than 5 minutes.{% endraw %}'
+      summary: "{% raw %}Instance {{ $labels.instance }} down{% endraw %}"
+    expr: '{% raw %}up{clientID="{% endraw %}{{ client.name }}{% raw %}"} == 0{% endraw %}'
+    for: 5m
+    labels:
+      severity: critical
+  - alert: RebootRequired
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} requires a reboot.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} - reboot required{% endraw %}"
+    expr: "{% raw %}node_reboot_required{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} > 0{% endraw %}"
+    labels:
+      severity: warning
+  - alert: NodeFilesystemSpaceFillingUp
+    annotations:
+      description: "{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has
+        only {{ printf \"%.2f\" $value }}% available space left and is filling up.{% endraw %}"
+      summary: "{% raw %}Filesystem is predicted to run out of space within the next 24 hours.{% endraw %}"
+    expr: "{% raw %}(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_filesystem_size_bytes{job=\"\
+        node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * 100 < 40\nand\n  predict_linear(node_filesystem_avail_bytes{job=\"\
+        node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[6h], 24*60*60) < 0\nand\n  node_filesystem_readonly{job=\"\
+        node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 0\n)\n{% endraw %}"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeFilesystemSpaceFillingUp
+    annotations:
+      description: "{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has
+        only {{ printf \"%.2f\" $value }}% available space left and is filling up fast.{% endraw %}"
+      summary: "{% raw %}Filesystem is predicted to run out of space within the next 4 hours.{% endraw %}"
+    expr: "{% raw %}(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_filesystem_size_bytes{job=\"\
+        node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * 100 < 20\nand\n  predict_linear(node_filesystem_avail_bytes{job=\"\
+        node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[6h], 4*60*60) < 0\nand\n  node_filesystem_readonly{job=\"\
+        node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 0\n)\n{% endraw %}"
+    for: 1h
+    labels:
+      severity: critical
+  - alert: NodeFilesystemAlmostOutOfSpace
+    annotations:
+      description: "{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has
+        only {{ printf \"%.2f\" $value }}% available space left.{% endraw %}"
+      summary: "{% raw %}Filesystem has less than 5% space left.{% endraw %}"
+    expr: "{% raw %}(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_filesystem_size_bytes{job=\"\
+    node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * 100 < 5\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\
+    \",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 0\n)\n{% endraw %}"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeFilesystemAlmostOutOfSpace
+    annotations:
+      description: "{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has
+          only {{ printf \"%.2f\" $value }}% available space left.{% endraw %}"
+      summary: "{% raw %}Filesystem has less than 3% space left.{% endraw %}"
+    expr: "{% raw %}(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_filesystem_size_bytes{job=\"\
+    node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * 100 < 3\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\
+    \",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 0\n)\n{% endraw %}"
+    for: 1h
+    labels:
+      severity: critical
+  - alert: NodeFilesystemFilesFillingUp
+    annotations:
+      description: "{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has
+        only {{ printf \"%.2f\" $value }}% available inodes left and is filling up.{% endraw %}"
+      summary: "{% raw %}Filesystem is predicted to run out of inodes within the next 24 hours.{% endraw %}"
+    expr: "{% raw %}(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_filesystem_files{job=\"\
+    node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * 100 < 40\nand\n  predict_linear(node_filesystem_files_free{job=\"\
+    node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[6h], 24*60*60) < 0\nand\n  node_filesystem_readonly{job=\"\
+    node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 0\n)\n{% endraw %}"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeFilesystemFilesFillingUp
+    annotations:
+      description: "{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has
+        only {{ printf \"%.2f\" $value }}% available inodes left and is filling up fast.{% endraw %}"
+      summary: "{% raw %}Filesystem is predicted to run out of inodes within the next 4 hours.{% endraw %}"
+    expr: "{% raw %}(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_filesystem_files{job=\"\
+      node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * 100 < 20\nand\n  predict_linear(node_filesystem_files_free{job=\"\
+      node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[6h], 4*60*60) < 0\nand\n  node_filesystem_readonly{job=\"\
+      node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 0\n)\n{% endraw %}"
+    for: 1h
+    labels:
+      severity: critical
+  - alert: NodeFilesystemAlmostOutOfFiles
+    annotations:
+      description: "{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has
+        only {{ printf \"%.2f\" $value }}% available inodes left.{% endraw %}"
+      summary: "{% raw %}Filesystem has less than 5% inodes left.{% endraw %}"
+    expr: "{% raw %}(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_filesystem_files{job=\"\
+      node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * 100 < 5\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\
+      \",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 0\n)\n{% endraw %}"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeFilesystemAlmostOutOfFiles
+    annotations:
+      description: "{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has
+        only {{ printf \"%.2f\" $value }}% available inodes left.{% endraw %}"
+      summary: "{% raw %}Filesystem has less than 3% inodes left.{% endraw %}"
+    expr: "{% raw %}(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_filesystem_files{job=\"\
+      node\",fstype!=\"\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * 100 < 3\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\
+      \",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 0\n)\n{% endraw %}"
+    for: 1h
+    labels:
+      severity: critical
+  - alert: NodeNetworkReceiveErrs
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered
+        {{ printf \"%.0f\" $value }} receive errors in the last two minutes.{% endraw %}"
+      summary: "{% raw %}Network interface is reporting many receive errors.{% endraw %}"
+    expr: "{% raw %}increase(node_network_receive_errs_total{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[2m]) > 10{% endraw %}"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeNetworkTransmitErrs
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered
+        {{ printf \"%.0f\" $value }} transmit errors in the last two minutes.{% endraw %}"
+      summary: "{% raw %}Network interface is reporting many transmit errors.{% endraw %}"
+    expr: "{% raw %}increase(node_network_transmit_errs_total{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[2m]) > 10{% endraw %}"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeHighNumberConntrackEntriesUsed
+    annotations:
+      description: "{% raw %}{{ $value | humanizePercentage }} of conntrack entries are used{% endraw %}"
+      summary: "{% raw %}Number of conntrack are getting close to the limit{% endraw %}"
+    expr: "{% raw %}(node_nf_conntrack_entries{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} / node_nf_conntrack_entries_limit{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}) > 0.75{% endraw %}"
+    labels:
+      severity: warning
+  - alert: NodeClockSkewDetected
+    annotations:
+      message: "{% raw %}Clock on {{ $labels.instance }} is out of sync by more than 300s. Ensure
+        NTP is configured correctly on this host.{% endraw %}"
+      summary: "{% raw %}Clock skew detected.{% endraw %}"
+    expr: "{% raw %}(\n  node_timex_offset_seconds{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} > 0.05\nand\n  deriv(node_timex_offset_seconds{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m])\
+      \ >= 0\n)\nor\n(\n  node_timex_offset_seconds{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} < -0.05\nand\n  deriv(node_timex_offset_seconds{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m])\
+      \ <= 0\n)\n{% endraw %}"
+    for: 10m
+    labels:
+      severity: warning
+  - alert: NodeClockNotSynchronising
+    annotations:
+      message: "{% raw %}Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured
+        on this host.{% endraw %}"
+      summary: "{% raw %}Clock not synchronising.{% endraw %}"
+    expr: "{% raw %}min_over_time(node_timex_sync_status{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m]) == 0{% endraw %}"
+    for: 10m
+    labels:
+      severity: warning
+  - alert: CriticalCPULoad
+    expr: "{% raw %}100 - (avg by (instance) (irate(node_cpu_seconds_total{job=\"node\",mode=\"idle\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m])) * 100) > 96{% endraw %}"
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has Critical CPU load for more than 2 minutes.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} - Critical CPU load{% endraw %}"
+  - alert: CriticalRAMUsage
+    expr: "{% raw %}(1 - ((node_memory_MemFree_bytes{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} + node_memory_Buffers_bytes{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} + node_memory_Cached_bytes{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}) / node_memory_MemTotal_bytes{clientID=\"{% endraw %}{{ client.name }}{% raw %}\"})) * 100 > 98{% endraw %}"
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} has Critical Memory Usage more than 5 minutes.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} has Critical Memory Usage{% endraw %}"
+{% endif %}
