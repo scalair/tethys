@@ -4,3 +4,5 @@
     src: prometheus/client.rules.j2
     dest: "{{ tmpdir.path }}/prometheus/{{ client.name }}.rules"
   when: client.products |length > 0
+  tags:
+  - generate-rules

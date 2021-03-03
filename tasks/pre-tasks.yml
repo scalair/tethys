@@ -4,6 +4,8 @@
     state: directory
   register: tmpdir
   delegate_to: localhost
+  tags:
+  - generate-rules
 
 - name: pre-tasks| create temporary Grafana directory
   file:
@@ -16,6 +18,8 @@
     path: "{{ tmpdir.path }}/prometheus"
     state: directory
   delegate_to: localhost
+  tags:
+  - generate-rules
 
 - name: pre-tasks| generate Grafana dashboards from templates
   include_tasks: 
@@ -34,6 +38,8 @@
   loop: "{{ clients }}"
   loop_control:
     loop_var: client
+  tags:
+  - generate-rules
 
 - name: pre-tasks| generating Prometheus playbook
   template:

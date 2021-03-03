@@ -1,9 +1,13 @@
 ---
 - name: Pre-processing checks
   include_tasks: pre-check.yml
+  tags:
+  - generate-rules
 
 - name: Pre-processing tasks
   include_tasks: pre-tasks.yml
+  tags:
+  - generate-rules
 
 - name: Install Prometheus Federation server
   include_tasks: "{{ tmpdir.path }}/prometheus/prometheus-playbook.yml"
