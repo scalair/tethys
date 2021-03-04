@@ -29,6 +29,7 @@
         - '{job="kubernetes-service-endpoints"}'
         - '{job="kubernetes-nodes-cadvisor"}'
         - '{job="kubelet"}'
+        - '{job="apiserver"}'
 {% endif %}
 {% if 'elasticsearch' in client.products %}
         - '{job="elasticsearch-exporter"}'
