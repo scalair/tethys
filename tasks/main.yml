@@ -33,6 +33,7 @@
 #   include_role:
 #     name: cloudalchemy.alertmanager
 
-# UNCOMMENT FOR PROD READY
-# - name: Post-processing tasks
-#   include_tasks: post-tasks.yml
+- name: Post-processing tasks
+  include_tasks: post-tasks.yml
+  tags:
+  - generate-rules

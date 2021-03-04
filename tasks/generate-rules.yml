@@ -6,3 +6,10 @@
   when: client.products |length > 0
   tags:
   - generate-rules
+
+- name: generate-rules| rules files directory
+  debug:
+    msg: "Prometheus rules directory : {{ tmpdir.path }}/prometheus/"
+  tags:
+  - never
+  - generate-rules
