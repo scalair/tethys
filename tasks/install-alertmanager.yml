@@ -1,8 +1,8 @@
 ---
 - name: install-alertmanager| Get PagerDuty integration keys
   set_fact:
-    pd_critical_key: "{{ lookup('community.general.hashi_vault', 'secret=secret/cloudops/common/pagerduty/publiccloud_svc:publiccloud_critical_key token=\"s.34gvrnY1r3lCmrm35XGLZ9Ih\" url=https://vault.aws.scalair.fr') }}"
-    pd_warning_key: "{{ lookup('community.general.hashi_vault', 'secret=secret/cloudops/common/pagerduty/publiccloud_svc:publiccloud_warning_key token=\"s.34gvrnY1r3lCmrm35XGLZ9Ih\" url=https://vault.aws.scalair.fr') }}"
+    pd_critical_key: "{{ lookup('community.general.hashi_vault', 'secret=secret/cloudops/common/pagerduty/publiccloud_svc:publiccloud_critical_key') }}"
+    pd_warning_key: "{{ lookup('community.general.hashi_vault', 'secret=secret/cloudops/common/pagerduty/publiccloud_svc:publiccloud_warning_key') }}"
 
 - name: install-alertmanager| Install AlertManager
   include_role:
