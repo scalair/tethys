@@ -1,0 +1,39 @@
+---
+- name: install-alertmanager| Get PagerDuty integration keys
+  set_fact:
+    pd_critical_key: "{{ lookup('community.general.hashi_vault', 'secret=secret/cloudops/common/pagerduty/publiccloud_svc:publiccloud_critical_key token=\"s.34gvrnY1r3lCmrm35XGLZ9Ih\" url=https://vault.aws.scalair.fr') }}"
+    pd_warning_key: "{{ lookup('community.general.hashi_vault', 'secret=secret/cloudops/common/pagerduty/publiccloud_svc:publiccloud_warning_key token=\"s.34gvrnY1r3lCmrm35XGLZ9Ih\" url=https://vault.aws.scalair.fr') }}"
+
+- name: install-alertmanager| Install AlertManager
+  include_role:
+    name: cloudalchemy.alertmanager
+  vars:
+    alertmanager_pagerduty_url: https://events.pagerduty.com/v2/enqueue
+    alertmanager_receivers:
+      - name: pagerduty-warning
+        pagerduty_configs:
+          - send_resolved: true
+            routing_key: "{{ pd_warning_key }}"
+            url: https://events.pagerduty.com/v2/enqueue
+            severity: warning
+      - name: pagerduty-error
+        pagerduty_configs:
+          - send_resolved: true
+            routing_key: "{{ pd_critical_key }}"
+            url: https://events.pagerduty.com/v2/enqueue
+            severity: error
+    alertmanager_route:
+      group_by: ['...']
+      receiver: pagerduty-warning
+      repeat_interval: 1h
+      routes:
+      - receiver: pagerduty-warning
+        group_by: ['...']
+        continue: true
+        match:
+          severity: warning
+      - receiver: pagerduty-error
+        group_by: ['...']
+        continue: true
+        match_re:
+          severity: error|critical

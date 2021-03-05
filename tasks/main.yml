@@ -29,9 +29,9 @@
     grafana_dashboards_dir: "{{ tmpdir.path }}"
     grafana_provisioning_synced: true
 
-# - name: Install AlertManager
-#   include_role:
-#     name: cloudalchemy.alertmanager
+- name: Install AlertManager
+  include_tasks: "install-alertmanager.yml"
+  when: alertmanager.enabled
 
 - name: Post-processing tasks
   include_tasks: post-tasks.yml
