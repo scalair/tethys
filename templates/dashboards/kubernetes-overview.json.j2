@@ -137,7 +137,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_info{node=~\"$node\"}) / sum(kube_node_status_allocatable_pods{node=~\".*\"})",
+          "expr": "sum(kube_pod_info{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"}) / sum(kube_node_status_allocatable_pods{node=~\".*\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -218,7 +218,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_container_resource_requests_cpu_cores{node=~\"$node\"}) / sum(kube_node_status_allocatable_cpu_cores{node=~\"$node\"})",
+          "expr": "sum(kube_pod_container_resource_requests_cpu_cores{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"}) / sum(kube_node_status_allocatable_cpu_cores{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -299,7 +299,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_container_resource_requests_memory_bytes{node=~\"$node\"}) / sum(kube_node_status_allocatable_memory_bytes{node=~\"$node\"})",
+          "expr": "sum(kube_pod_container_resource_requests_memory_bytes{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"}) / sum(kube_node_status_allocatable_memory_bytes{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -380,7 +380,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "(sum (node_filesystem_size_bytes{kubernetes_node=~\"$node\"}) - sum (node_filesystem_free_bytes{kubernetes_node=~\"$node\"})) / sum (node_filesystem_size_bytes{kubernetes_node=~\"$node\"})",
+          "expr": "(sum (node_filesystem_size_bytes{kubernetes_node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"}) - sum (node_filesystem_free_bytes{kubernetes_node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})) / sum (node_filesystem_size_bytes{kubernetes_node=~\"$node\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -437,21 +437,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(kube_node_status_allocatable_pods{node=~\"$node\"})",
+          "expr": "sum(kube_node_status_allocatable_pods{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "allocatable",
           "refId": "A"
         },
         {
-          "expr": "sum(kube_node_status_capacity_pods{node=~\"$node\"})",
+          "expr": "sum(kube_node_status_capacity_pods{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "capacity",
           "refId": "B"
         },
         {
-          "expr": "sum(kube_pod_info{node=~\"$node\"})",
+          "expr": "sum(kube_pod_info{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "requested",
@@ -537,21 +537,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(kube_node_status_capacity_cpu_cores{node=~\"$node\"})",
+          "expr": "sum(kube_node_status_capacity_cpu_cores{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "allocatable",
           "refId": "A"
         },
         {
-          "expr": "sum(kube_node_status_allocatable_cpu_cores{node=~\"$node\"})",
+          "expr": "sum(kube_node_status_allocatable_cpu_cores{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "capacity",
           "refId": "B"
         },
         {
-          "expr": "sum(kube_pod_container_resource_requests_cpu_cores{node=~\"$node\"})",
+          "expr": "sum(kube_pod_container_resource_requests_cpu_cores{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "requested",
@@ -638,21 +638,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(kube_node_status_allocatable_memory_bytes{node=~\"$node\"})",
+          "expr": "sum(kube_node_status_allocatable_memory_bytes{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "allocatable",
           "refId": "A"
         },
         {
-          "expr": "sum(kube_node_status_capacity_memory_bytes{node=~\"$node\"})",
+          "expr": "sum(kube_node_status_capacity_memory_bytes{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "capacity",
           "refId": "B"
         },
         {
-          "expr": "sum(kube_pod_container_resource_requests_memory_bytes{node=~\"$node\"})",
+          "expr": "sum(kube_pod_container_resource_requests_memory_bytes{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "requested",
@@ -738,14 +738,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(node_filesystem_size_bytes{kubernetes_node=~\"$node\"}) - sum(node_filesystem_free_bytes{kubernetes_node=~\"$node\"})",
+          "expr": "sum(node_filesystem_size_bytes{kubernetes_node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"}) - sum(node_filesystem_free_bytes{kubernetes_node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "usage",
           "refId": "A"
         },
         {
-          "expr": "sum(node_filesystem_size_bytes{kubernetes_node=~\"$node\"})",
+          "expr": "sum(node_filesystem_size_bytes{kubernetes_node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "limit",
@@ -878,7 +878,7 @@
       ],
       "targets": [
         {
-          "expr": "kube_deployment_status_replicas{namespace=~\"$namespace\"}",
+          "expr": "kube_deployment_status_replicas{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"}",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -953,7 +953,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_deployment_status_replicas{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_deployment_status_replicas{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1034,7 +1034,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_deployment_status_replicas_updated{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_deployment_status_replicas_updated{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1115,7 +1115,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_deployment_status_replicas_unavailable{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_deployment_status_replicas_unavailable{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1209,7 +1209,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_node_info{node=~\"$node\"})",
+          "expr": "sum(kube_node_info{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1290,7 +1290,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_node_status_condition{condition=\"DiskPressure\", node=~\"$node\", status=\"true\"})",
+          "expr": "sum(kube_node_status_condition{condition=\"DiskPressure\", node=~\"$node\", status=\"true\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1371,7 +1371,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_node_spec_unschedulable{node=~\"$node\"})",
+          "expr": "sum(kube_node_spec_unschedulable{node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1465,7 +1465,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Running\"})",
+          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Running\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1547,7 +1547,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Pending\"})",
+          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Pending\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1629,7 +1629,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Failed\"})",
+          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Failed\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1711,7 +1711,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Succeeded\"})",
+          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Succeeded\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1793,7 +1793,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Unknown\"})",
+          "expr": "sum(kube_pod_status_phase{namespace=~\"$namespace\", phase=\"Unknown\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1888,7 +1888,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_container_status_running{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_pod_container_status_running{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1969,7 +1969,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_container_status_waiting{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_pod_container_status_waiting{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -2050,7 +2050,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_container_status_terminated{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_pod_container_status_terminated{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -2131,7 +2131,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(delta(kube_pod_container_status_restarts{namespace=\"kube-system\"}[30m]))",
+          "expr": "sum(delta(kube_pod_container_status_restarts{namespace=\"kube-system\", clusterID=\"$clusterID\", clientID=\"$clientID\"}[30m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -2212,7 +2212,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_container_resource_requests_cpu_cores{namespace=~\"$namespace\", node=~\"$node\"})",
+          "expr": "sum(kube_pod_container_resource_requests_cpu_cores{namespace=~\"$namespace\", node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -2293,7 +2293,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_pod_container_resource_requests_memory_bytes{namespace=~\"$namespace\", node=~\"$node\"})",
+          "expr": "sum(kube_pod_container_resource_requests_memory_bytes{namespace=~\"$namespace\", node=~\"$node\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -2387,7 +2387,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_job_status_succeeded{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_job_status_succeeded{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -2468,7 +2468,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_job_status_active{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_job_status_active{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -2549,7 +2549,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kube_job_status_failed{namespace=~\"$namespace\"})",
+          "expr": "sum(kube_job_status_failed{namespace=~\"$namespace\", clusterID=\"$clusterID\", clientID=\"$clientID\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
