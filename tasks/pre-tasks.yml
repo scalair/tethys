@@ -21,6 +21,13 @@
   tags:
   - generate-rules
 
+- name: pre-tasks| create temporary Apache directory
+  file:
+    path: "{{ tmpdir.path }}/apache"
+    state: directory
+  delegate_to: localhost
+  when: reverse_proxy.enabled
+
 - name: pre-tasks| generate Grafana dashboards from templates
   include_tasks: 
     file: generate-dashboards.yml
@@ -46,3 +53,10 @@
     src: prometheus/playbook.yml.j2
     dest: "{{ tmpdir.path }}/prometheus/prometheus-playbook.yml"
   delegate_to: localhost
+
+- name: pre-tasks| generating Apache Reverse Proxy playbook
+  template:
+    src: apache/playbook.yml.j2
+    dest: "{{ tmpdir.path }}/apache/apache-playbook.yml"
+  delegate_to: localhost
+  when: reverse_proxy.enabled
