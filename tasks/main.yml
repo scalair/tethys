@@ -9,15 +9,15 @@
   tags:
   - generate-rules
 
+- name: Install Apache as Reverse Proxy
+  include_tasks: "{{ tmpdir.path }}/apache/apache-playbook.yml"
+  when: reverse_proxy.enabled
+
 - name: Install Certbot for SSL certificates
   include_tasks: "{{ tmpdir.path }}/certbot/certbot-playbook.yml"
   when:
   - reverse_proxy.enabled
   - reverse_proxy.certbot
-
-- name: Install Apache as Reverse Proxy
-  include_tasks: "{{ tmpdir.path }}/apache/apache-playbook.yml"
-  when: reverse_proxy.enabled
 
 - name: Install Prometheus Federation server
   include_tasks: "{{ tmpdir.path }}/prometheus/prometheus-playbook.yml"
