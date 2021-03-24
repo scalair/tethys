@@ -15,6 +15,9 @@
     - status.load
     - proxy_http.load
     - proxy.load
+{% if reverse_proxy.certbot %}
+    - ssl.load
+{% endif %}
 
     apache_global_vhost_settings: |
       ServerTokens Prod
@@ -33,3 +36,23 @@
         ErrorLog ${APACHE_LOG_DIR}/{{ vhost.name }}-error.log
         CustomLog ${APACHE_LOG_DIR}/{{ vhost.name }}-access.log combined
 {% endfor %}
+
+{% if reverse_proxy.certbot %}
+    apache_vhosts_ssl:
+{% for vhost in reverse_proxy.vhosts %}
+    - servername: "{{ vhost.domain }}"
+      serveralias: "{{ vhost.domain }}"
+      serveradmin: "{{ reverse_proxy.email }}"
+
+      certificate_file: "/etc/letsencrypt/live/{{ (reverse_proxy.vhosts|first).domain | replace('*.', '') }}/cert.pem"
+      certificate_key_file: "/etc/letsencrypt/live/{{ (reverse_proxy.vhosts|first).domain | replace('*.', '') }}/privkey.pem"
+      certificate_chain_file: "/etc/letsencrypt/live/{{ (reverse_proxy.vhosts|first).domain | replace('*.', '') }}/chain.pem"
+
+      extra_parameters: |
+        ProxyPass / http://{{ vhost.backend_endpoint }}/
+        ProxyPassReverse / http://{{ vhost.backend_endpoint }}/
+
+        ErrorLog ${APACHE_LOG_DIR}/{{ vhost.name }}-ssl-error.log
+        CustomLog ${APACHE_LOG_DIR}/{{ vhost.name }}-ssl-access.log combined
+{% endfor %}
+{% endif %}
