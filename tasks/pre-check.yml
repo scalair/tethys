@@ -28,3 +28,10 @@
   when: 
   - reverse_proxy.enabled
   - reverse_proxy.vhosts is not defined or reverse_proxy.vhosts|length == 0
+
+- name: pre-check| certbot is enabled while reverse_proxy is not
+  fail:
+    msg: "certbot cannot be enabled when reverse_proxy is disabled."
+  when:
+  - not reverse_proxy.enabled
+  - reverse_proxy.certbot

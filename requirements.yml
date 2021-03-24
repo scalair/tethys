@@ -13,3 +13,7 @@
 # Install Apache from Ansible Galaxy
 - src: geerlingguy.apache
   version: 3.1.4
+
+## Install Apache from Ansible Galaxy
+- src: geerlingguy.certbot
+  version: 3.1.0

@@ -1,0 +1,17 @@
+---
+- name: Install Certbot for SSL certificates
+  include_role:
+    name: geerlingguy.certbot
+    apply:
+      become: true
+  vars:
+    certbot_admin_email: "{{ reverse_proxy.email }}"
+    certbot_create_if_missing: true
+    certbot_create_standalone_stop_services:
+    - apache2
+    certbot_certs:
+    - email: "{{ reverse_proxy.email }}"
+      domains:
+{% for vhost in reverse_proxy.vhosts %}
+      - {{ vhost.domain }}
+{% endfor %}

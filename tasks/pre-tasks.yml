@@ -28,6 +28,15 @@
   delegate_to: localhost
   when: reverse_proxy.enabled
 
+- name: pre-tasks| create temporary Certbot directory
+  file:
+    path: "{{ tmpdir.path }}/certbot"
+    state: directory
+  delegate_to: localhost
+  when:
+  - reverse_proxy.enabled
+  - reverse_proxy.certbot
+
 - name: pre-tasks| generate Grafana dashboards from templates
   include_tasks: 
     file: generate-dashboards.yml
@@ -60,3 +69,12 @@
     dest: "{{ tmpdir.path }}/apache/apache-playbook.yml"
   delegate_to: localhost
   when: reverse_proxy.enabled
+
+- name: pre-tasks| generating Certbot playbook
+  template:
+    src: certbot/playbook.yml.j2
+    dest: "{{ tmpdir.path }}/certbot/certbot-playbook.yml"
+  delegate_to: localhost
+  when:
+  - reverse_proxy.enabled
+  - reverse_proxy.certbot

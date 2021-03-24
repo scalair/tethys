@@ -9,6 +9,12 @@
   tags:
   - generate-rules
 
+- name: Install Certbot for SSL certificates
+  include_tasks: "{{ tmpdir.path }}/certbot/certbot-playbook.yml"
+  when:
+  - reverse_proxy.enabled
+  - reverse_proxy.certbot
+
 - name: Install Apache as Reverse Proxy
   include_tasks: "{{ tmpdir.path }}/apache/apache-playbook.yml"
   when: reverse_proxy.enabled
