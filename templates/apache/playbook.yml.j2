@@ -31,7 +31,7 @@
       serveradmin: "{{ reverse_proxy.email }}"
 {% if reverse_proxy.certbot %}
       extra_parameters: |
-        Redirect permanent / https://"{{ vhost.domain }}"/
+        Redirect permanent / https://{{ vhost.domain }}/
 
         ErrorLog ${APACHE_LOG_DIR}/{{ vhost.name }}-error.log
         CustomLog ${APACHE_LOG_DIR}/{{ vhost.name }}-access.log combined
