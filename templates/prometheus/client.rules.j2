@@ -340,15 +340,15 @@ groups:
   - expr: "{% raw %}histogram_quantile(0.99, sum(rate(apiserver_request_latencies_bucket{job=\"apiserver\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\", clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m])) without(instance, pod)) / 1e+06{% endraw %}"
     labels:
       quantile: "0.99"
-    record: "{{ client.name }}:{{ prometheus.name }}:cluster_quantile:apiserver_request_latencies:histogram_quantile"
+    record: cluster_quantile:apiserver_request_latencies:histogram_quantile
   - expr: "{% raw %}histogram_quantile(0.9, sum(rate(apiserver_request_latencies_bucket{job=\"apiserver\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\", clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m])) without(instance, pod)) / 1e+06{% endraw %}"
     labels:
       quantile: "0.9"
-    record: "{{ client.name }}:{{ prometheus.name }}:cluster_quantile:apiserver_request_latencies:histogram_quantile"
+    record: cluster_quantile:apiserver_request_latencies:histogram_quantile
   - expr: "{% raw %}histogram_quantile(0.5, sum(rate(apiserver_request_latencies_bucket{job=\"apiserver\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\", clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m])) without(instance, pod)) / 1e+06{% endraw %}"
     labels:
       quantile: "0.5"
-    record: "{{ client.name }}:{{ prometheus.name }}:cluster_quantile:apiserver_request_latencies:histogram_quantile"
+    record: cluster_quantile:apiserver_request_latencies:histogram_quantile
 
 - name: "{{ client.name }}-{{ prometheus.name }}-kubernetes-system"
   rules:
@@ -458,27 +458,27 @@ groups:
 - name: "{{ client.name }}-{{ prometheus.name }}-k8s.rules"
   rules:
   - expr: "{% raw %}sum(rate(container_cpu_usage_seconds_total{job=\"kubernetes-nodes-cadvisor\", image!=\"\", name!=\"\", clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m])) by (namespace){% endraw %}"
-    record: "{{ client.name }}:{{ prometheus.name }}:namespace:container_cpu_usage_seconds_total:sum_rate"
+    record: namespace:container_cpu_usage_seconds_total:sum_rate
   - expr: "{% raw %}sum(container_memory_usage_bytes{job=\"kubernetes-nodes-cadvisor\", image!=\"\", name!=\"\", clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}) by (namespace){% endraw %}"
-    record: "{{ client.name }}:{{ prometheus.name }}:namespace:container_memory_usage_bytes:sum"
+    record: namespace:container_memory_usage_bytes:sum
   - expr: "{% raw %}sum by (namespace, pod_name, container_name) (rate(container_cpu_usage_seconds_total{job=\"kubernetes-nodes-cadvisor\", image!=\"\", name!=\"\", clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}[5m])){% endraw %}"
-    record: "{{ client.name }}:{{ prometheus.name }}:namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate"
+    record: namespace_pod_name_container_name:container_cpu_usage_seconds_total:sum_rate
   - expr: "{% raw %}sum by(namespace) (kube_pod_container_resource_requests_memory_bytes{job=\"kube-state-metrics\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * on (endpoint, instance, job, namespace, pod, service) group_left(phase) (kube_pod_status_phase{phase=~\"^(Pending|Running)$\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 1)){% endraw %}"
-    record: "{{ client.name }}:{{ prometheus.name }}:namespace_name:kube_pod_container_resource_requests_memory_bytes:sum"
+    record: namespace_name:kube_pod_container_resource_requests_memory_bytes:sum
   - expr: "{% raw %}sum by (namespace) (kube_pod_container_resource_requests_cpu_cores{job=\"kube-state-metrics\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} * on (endpoint, instance, job, namespace, pod, service) group_left(phase) (kube_pod_status_phase{phase=~\"^(Pending|Running)$\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"} == 1)){% endraw %}"
-    record: "{{ client.name }}:{{ prometheus.name }}:namespace_name:kube_pod_container_resource_requests_cpu_cores:sum"
+    record: namespace_name:kube_pod_container_resource_requests_cpu_cores:sum
   - expr: "{% raw %}sum(label_replace(label_replace(kube_pod_owner{job=\"kube-state-metrics\", owner_kind=\"ReplicaSet\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") * on(replicaset, namespace) group_left(owner_name) kube_replicaset_owner{job=\"kube-state-metrics\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"},\"workload\", \"$1\", \"owner_name\", \"(.*)\")) by (namespace, workload, pod){% endraw %}"
     labels:
       workload_type: deployment
-    record: "{{ client.name }}:{{ prometheus.name }}:mixin_pod_workload"
+    record: mixin_pod_workload
   - expr: "{% raw %}sum(label_replace(kube_pod_owner{job=\"kube-state-metrics\", owner_kind=\"DaemonSet\", clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}, \"workload\", \"$1\", \"owner_name\", \"(.*)\")) by (namespace, workload, pod){% endraw %}"
     labels:
       workload_type: daemonset
-    record: "{{ client.name }}:{{ prometheus.name }}:mixin_pod_workload"
+    record: mixin_pod_workload
   - expr: "{% raw %}sum(label_replace(kube_pod_owner{job=\"kube-state-metrics\", owner_kind=\"StatefulSet\",clusterID=\"{% endraw %}{{ prometheus.name }}{% raw %}\",clientID=\"{% endraw %}{{ client.name }}{% raw %}\"}, \"workload\", \"$1\", \"owner_name\", \"(.*)\")) by (namespace, workload, pod){% endraw %}"
     labels:
       workload_type: statefulset
-    record: "{{ client.name }}:{{ prometheus.name }}:mixin_pod_workload"
+    record: mixin_pod_workload
 
 - name: "{{ client.name }}-{{ prometheus.name }}-kubernetes-resources"
   rules:
@@ -487,7 +487,7 @@ groups:
       message: Cluster has overcommitted CPU resource requests for Pods and cannot
         tolerate node failure.
       runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubecpuovercommit
-    expr: "{% raw %}sum({% endraw %}{{ client.name }}{% raw %}:{% endraw %}{{ prometheus.name }}{% raw %}:{% endraw %}namespace_name:kube_pod_container_resource_requests_cpu_cores:sum) / sum(node:node_num_cpu:sum) > (count(node:node_num_cpu:sum)-1) / count(node:node_num_cpu:sum){% endraw %}"
+    expr: "{% raw %}sum(namespace_name:kube_pod_container_resource_requests_cpu_cores:sum) / sum(node:node_num_cpu:sum) > (count(node:node_num_cpu:sum)-1) / count(node:node_num_cpu:sum){% endraw %}"
     for: 5m
     labels:
       severity: warning
@@ -496,7 +496,7 @@ groups:
       message: Cluster has overcommitted memory resource requests for Pods and cannot
         tolerate node failure.
       runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubememovercommit
-    expr: "{% raw %}sum({% endraw %}{{ client.name }}{% raw %}:{% endraw %}{{ prometheus.name }}{% raw %}:namespace_name:kube_pod_container_resource_requests_memory_bytes:sum) / sum(node_memory_MemTotal_bytes) > (count(node:node_num_cpu:sum)-1) / count(node:node_num_cpu:sum){% endraw %}"
+    expr: "{% raw %}sum(namespace_name:kube_pod_container_resource_requests_memory_bytes:sum) / sum(node_memory_MemTotal_bytes) > (count(node:node_num_cpu:sum)-1) / count(node:node_num_cpu:sum){% endraw %}"
     for: 5m
     labels:
       severity: warning
