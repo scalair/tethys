@@ -537,3 +537,33 @@ groups:
 {% endif %}
 {% endfor %}
 {% endif %}
+
+{% if 'elasticsearch' in client.products %}
+- name: "{{ client.name }}-elasticsearch"
+  rules:
+  - alert: ElasticsearchClusterHealthStatus
+    annotations:
+      description: '{% raw %}Cluster {{ $labels.cluster }} of job {{ $labels.job }} has a non OK state for
+        more than 5 minutes.{% endraw %}'
+      summary: "{% raw %}Cluster {{ $labels.cluster }} not GREEN{% endraw %}"
+    expr: '{% raw %}elasticsearch_cluster_health_status{color="green",clientID="{% endraw %}{{ client.name }}{% raw %}"} == 0{% endraw %}'
+    for: 5m
+    labels:
+      severity: critical
+  - alert: ElasticsearchDiskWaterMarkMinor
+    annotations:
+      description: '{% raw %}Raises when the elasticsearch instance {{ $labels.host }} uses 60% of disk space on the cluster {{ $labels.cluster }}.{% endraw %}'
+      summary: "{% raw %}The elasticsearch instance {{ $labels.host }} uses 60% of disk space on {{ $labels.cluster }} cluster.{% endraw %}"
+    expr: '{% raw %}(max by(host, instance) (elasticsearch_filesystem_data_size_bytes{clientID="{% endraw %}{{ client.name }}{% raw %}"}) - max by(host, instance) (elasticsearch_filesystem_data_available_bytes{clientID="{% endraw %}{{ client.name }}{% raw %}"})) / max by(host, instance) (elasticsearch_filesystem_data_size_bytes{clientID="{% endraw %}{{ client.name }}{% raw %}"}) >= 0.6{% endraw %}'
+    for: 5m
+    labels:
+      severity: warning
+  - alert: ElasticsearchDiskWaterMarkMinor
+    annotations:
+      description: '{% raw %}Raises when the elasticsearch instance {{ $labels.host }} uses 90% of disk space on the cluster {{ $labels.cluster }}.{% endraw %}'
+      summary: "{% raw %}The elasticsearch instance {{ $labels.host }} uses 90% of disk space on {{ $labels.cluster }} cluster.{% endraw %}"
+    expr: '{% raw %}(max by(host, instance) (elasticsearch_filesystem_data_size_bytes{clientID="{% endraw %}{{ client.name }}{% raw %}"}) - max by(host, instance) (elasticsearch_filesystem_data_available_bytes{clientID="{% endraw %}{{ client.name }}{% raw %}"})) / max by(host, instance) (elasticsearch_filesystem_data_size_bytes{clientID="{% endraw %}{{ client.name }}{% raw %}"}) >= 0.9{% endraw %}'
+    for: 5m
+    labels:
+      severity: critical
+{% endif %}
