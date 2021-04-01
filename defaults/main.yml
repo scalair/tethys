@@ -1,3 +1,4 @@
 reverse_proxy:
   enabled: false
   certbot: false
+  allow_list: []

@@ -37,7 +37,7 @@
         CustomLog ${APACHE_LOG_DIR}/{{ vhost.name }}-access.log combined
 {% else %}
       extra_parameters: |
-{% if reverse_proxy.allow_list|length > 0 %}
+{% if (reverse_proxy.allow_list|default([]))|length > 0 %}
         <Location />
 {% for ip in reverse_proxy.allow_list %}
           Require ip {{ ip }}
@@ -69,7 +69,7 @@
       certificate_chain_file: "/etc/letsencrypt/live/{{ (reverse_proxy.vhosts|first).domain | replace('*.', '') }}/chain.pem"
 
       extra_parameters: |
-{% if reverse_proxy.allow_list|length > 0 %}
+{% if (reverse_proxy.allow_list|default([]))|length > 0 %}
         <Location />
 {% for ip in reverse_proxy.allow_list %}
           Require ip {{ ip }}
