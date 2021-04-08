@@ -24,6 +24,7 @@
         'match[]':
 {% if 'node' in client.products %}
         - '{job="node-exporter"}'
+        - '{job="kube-state-metrics"}'
 {% endif %}
 {% if 'kubernetes' in client.products %}
         - '{job="kubernetes-service-endpoints"}'
@@ -54,6 +55,11 @@
       - source_labels: [ job,kubernetes_name ]
         target_label: job
         regex: '^kubernetes-service-endpoints;prometheus-node-exporter$'
+        action: replace
+        replacement: node-exporter
+      - source_labels: [ job ]
+        target_label: job
+        regex: '^kube-state-metrics$'
         action: replace
         replacement: node-exporter
 {% endif %}
