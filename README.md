@@ -26,12 +26,12 @@ Because metrics datas retrieved from federated prometheuses servers must have th
 
 |Exporter|Platform|Provisioning Tool|Repo|Description|
 |-|-|-|-|-|
-|node-exporter|VM, instances, etc.|ansible|https://galaxy.ansible.com/cloudalchemy/node-exporter|Install node-exporter on classic instance or virtual machines|
-|node-exporter|Kubernetes|helm|https://prometheus-community.github.io/helm-charts|Install node-exporter as Kubernetes `DaemonSet` to monitor Kubernetes cluster nodes.|
-|kube-state-metrics|Kubernetes|helm|https://prometheus-community.github.io/helm-charts|Install state-metrics for Kubernetes cluster.|
-|cadvisor|Kubernetes|helm|https://artifacthub.io/packages/helm/ckotzbauer/cadvisor|Install cadvisor for in-depth metrics in Kubernetes workloads.|
-|elasticsearch-exporter|VM, instances, etc.|ansible|https://galaxy.ansible.com/lyr/elasticsearch_exporter|Install elasticsearch-exporter on classic instance or virtual machines|
-|elasticsearch-exporter|Kubernetes|helm|https://artifacthub.io/packages/helm/prometheus-community/prometheus-elasticsearch-exporter|Install elasticsearch-exporter within Kubernetes.|
+|node-exporter|VM, instances, etc.|ansible|<https://galaxy.ansible.com/cloudalchemy/node-exporter>|Install node-exporter on classic instance or virtual machines|
+|node-exporter|Kubernetes|helm|<https://prometheus-community.github.io/helm-charts>|Install node-exporter as Kubernetes `DaemonSet` to monitor Kubernetes cluster nodes.|
+|kube-state-metrics|Kubernetes|helm|<https://prometheus-community.github.io/helm-charts>|Install state-metrics for Kubernetes cluster.|
+|cadvisor|Kubernetes|helm|<https://artifacthub.io/packages/helm/ckotzbauer/cadvisor>|Install cadvisor for in-depth metrics in Kubernetes workloads.|
+|elasticsearch-exporter|VM, instances, etc.|ansible|<https://galaxy.ansible.com/lyr/elasticsearch_exporter>|Install elasticsearch-exporter on classic instance or virtual machines|
+|elasticsearch-exporter|Kubernetes|helm|<https://artifacthub.io/packages/helm/prometheus-community/prometheus-elasticsearch-exporter>|Install elasticsearch-exporter within Kubernetes.|
 
 ## Variables
 

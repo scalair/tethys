@@ -27,13 +27,13 @@
       receiver: pagerduty-warning
       repeat_interval: 1h
       routes:
-      - receiver: pagerduty-warning
-        group_by: ['...']
-        continue: true
-        match:
-          severity: warning
-      - receiver: pagerduty-error
-        group_by: ['...']
-        continue: true
-        match_re:
-          severity: error|critical
+        - receiver: pagerduty-warning
+          group_by: ['...']
+          continue: true
+          match:
+            severity: warning
+        - receiver: pagerduty-error
+          group_by: ['...']
+          continue: true
+          match_re:
+            severity: error|critical

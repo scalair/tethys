@@ -4,7 +4,7 @@
     msg: "clients list is empty, please check configuration..."
   when: clients | length == 0
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: pre-check| prometheus_federation list is empty
   fail:
@@ -12,7 +12,7 @@
   loop: "{{ clients }}"
   when: item.prometheus_federation | length == 0
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: pre-check| products list is empty
   fail:
@@ -20,18 +20,18 @@
   loop: "{{ clients }}"
   when: item.products | length == 0
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: pre-check| vhosts list is empty while reverse_proxy is enabled
   fail:
     msg: "vhosts list is empty while reverse_proxy.enable is true."
-  when: 
-  - reverse_proxy.enabled
-  - reverse_proxy.vhosts is not defined or reverse_proxy.vhosts|length == 0
+  when:
+    - reverse_proxy.enabled
+    - reverse_proxy.vhosts is not defined or reverse_proxy.vhosts|length == 0
 
 - name: pre-check| certbot is enabled while reverse_proxy is not
   fail:
     msg: "certbot cannot be enabled when reverse_proxy is disabled."
   when:
-  - not reverse_proxy.enabled
-  - reverse_proxy.certbot
+    - not reverse_proxy.enabled
+    - reverse_proxy.certbot

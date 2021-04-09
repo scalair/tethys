@@ -2,29 +2,33 @@
 - name: pre-tasks| create temporary directory
   tempfile:
     state: directory
+    mode: 0750
   register: tmpdir
   delegate_to: localhost
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: pre-tasks| create temporary Grafana directory
   file:
     path: "{{ tmpdir.path }}/grafana"
     state: directory
+    mode: 0750
   delegate_to: localhost
 
 - name: pre-tasks| create temporary Prometheus directory
   file:
     path: "{{ tmpdir.path }}/prometheus"
     state: directory
+    mode: 0750
   delegate_to: localhost
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: pre-tasks| create temporary Apache directory
   file:
     path: "{{ tmpdir.path }}/apache"
     state: directory
+    mode: 0750
   delegate_to: localhost
   when: reverse_proxy.enabled
 
@@ -32,13 +36,14 @@
   file:
     path: "{{ tmpdir.path }}/certbot"
     state: directory
+    mode: 0750
   delegate_to: localhost
   when:
-  - reverse_proxy.enabled
-  - reverse_proxy.certbot
+    - reverse_proxy.enabled
+    - reverse_proxy.certbot
 
 - name: pre-tasks| generate Grafana dashboards from templates
-  include_tasks: 
+  include_tasks:
     file: generate-dashboards.yml
     apply:
       delegate_to: localhost
@@ -55,18 +60,20 @@
   loop_control:
     loop_var: client
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: pre-tasks| generating Prometheus playbook
   template:
     src: prometheus/playbook.yml.j2
     dest: "{{ tmpdir.path }}/prometheus/prometheus-playbook.yml"
+    mode: 0640
   delegate_to: localhost
 
 - name: pre-tasks| generating Apache Reverse Proxy playbook
   template:
     src: apache/playbook.yml.j2
     dest: "{{ tmpdir.path }}/apache/apache-playbook.yml"
+    mode: 0640
   delegate_to: localhost
   when: reverse_proxy.enabled
 
@@ -74,7 +81,8 @@
   template:
     src: certbot/playbook.yml.j2
     dest: "{{ tmpdir.path }}/certbot/certbot-playbook.yml"
+    mode: 0640
   delegate_to: localhost
   when:
-  - reverse_proxy.enabled
-  - reverse_proxy.certbot
+    - reverse_proxy.enabled
+    - reverse_proxy.certbot

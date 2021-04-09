@@ -3,21 +3,24 @@
   template:
     src: dashboards/node.json.j2
     dest: "{{ tmpdir.path }}/grafana/{{ client.name }}-node.json"
+    mode: 0640
   when: "'node' in client.products"
 
 - name: generate-dashboards| elasticsearch
   template:
     src: dashboards/elasticsearch.json.j2
     dest: "{{ tmpdir.path }}/grafana/{{ client.name }}-elasticsearch.json"
+    mode: 0640
   when: "'elasticsearch' in client.products"
 
 - name: generate-dashboards| kubernetes overview
   template:
     src: dashboards/kubernetes-overview.json.j2
     dest: "{{ tmpdir.path }}/grafana/{{ client.name }}-{{ clusterID.name }}-kubernetes-overview.json"
+    mode: 0640
   when:
-  - "'kubernetes' in client.products"
-  - "clusterID.kubernetes_hosted"
+    - "'kubernetes' in client.products"
+    - "clusterID.kubernetes_hosted"
   loop: "{{ client.prometheus_federation }}"
   loop_control:
     loop_var: clusterID
@@ -26,9 +29,10 @@
   template:
     src: dashboards/kubernetes-detailed.json.j2
     dest: "{{ tmpdir.path }}/grafana/{{ client.name }}-{{ clusterID.name }}-kubernetes-detailed.json"
+    mode: 0640
   when:
-  - "'kubernetes' in client.products"
-  - "clusterID.kubernetes_hosted"
+    - "'kubernetes' in client.products"
+    - "clusterID.kubernetes_hosted"
   loop: "{{ client.prometheus_federation }}"
   loop_control:
     loop_var: clusterID

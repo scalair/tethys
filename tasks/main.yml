@@ -2,12 +2,12 @@
 - name: Pre-processing checks
   include_tasks: pre-check.yml
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: Pre-processing tasks
   include_tasks: pre-tasks.yml
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: Install Apache as Reverse Proxy
   include_tasks: "{{ tmpdir.path }}/apache/apache-playbook.yml"
@@ -16,8 +16,8 @@
 - name: Install Certbot for SSL certificates
   include_tasks: "{{ tmpdir.path }}/certbot/certbot-playbook.yml"
   when:
-  - reverse_proxy.enabled
-  - reverse_proxy.certbot
+    - reverse_proxy.enabled
+    - reverse_proxy.certbot
 
 - name: Install Prometheus Federation server
   include_tasks: "{{ tmpdir.path }}/prometheus/prometheus-playbook.yml"
@@ -30,12 +30,12 @@
       admin_user: admin
       admin_password: admin
     grafana_datasources:
-    - name: Prometheus
-      type: prometheus
-      access: proxy
-      url: 'http://localhost:9090'
-      basicAuth: false
-      default: true
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: 'http://localhost:9090'
+        basicAuth: false
+        default: true
     grafana_dashboards_dir: "{{ tmpdir.path }}/grafana"
     grafana_provisioning_synced: true
 
@@ -46,4 +46,4 @@
 - name: Post-processing tasks
   include_tasks: post-tasks.yml
   tags:
-  - generate-rules
+    - generate-rules

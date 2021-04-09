@@ -3,13 +3,16 @@
   template:
     src: prometheus/client.rules.j2
     dest: "{{ tmpdir.path }}/prometheus/{{ client.name }}.rules"
+    mode: 0640
+    owner: root
+    group: prometheus
   when: client.products |length > 0
   tags:
-  - generate-rules
+    - generate-rules
 
 - name: generate-rules| rules files directory
   debug:
     msg: "Prometheus rules directory : {{ tmpdir.path }}/prometheus/"
   tags:
-  - never
-  - generate-rules
+    - never
+    - generate-rules
