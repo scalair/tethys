@@ -42,7 +42,7 @@ A list of clients to federate. Each client in `clients` has the following variab
 - `name` : define the client name that will be used accross all the stack to identify the client, and to add filtering on queries.
 - `prometheus_federation`: a list of prometheuses servers to federate for this client. It allows to retrieve data metrics from specified prometheuses servers. Each federated prometheus in `prometheus_federation` has the following variables :
   - `name`: specify a name for this federated prometheus. It also adds a label `clusterID: <name>` for all metrics data retrieved from this prometheus server.
-  - `endpoint`: specify the prometheus endpoint to federate. The endpoint must be available from the tethys deployed prometheus that federates (e.g. http(s)://<url>:<port>).
+  - `endpoint`: specify the prometheus endpoint to federate. The endpoint must be available from the tethys deployed prometheus that federates (e.g. http(s)://\<url\>:\<port\>).
   - `username` : specify the username for basic_auth to request the endpoint.
   - `password` : specify the password for basic_auth to request the endpoint.
   - `kubernetes_hosted`: specify if the prometheus endpoint is hosted on Kubernetes. If `true`, then it will also retrieve metrics data and create dashboards for this Kubernetes cluster.
