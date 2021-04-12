@@ -42,7 +42,9 @@ A list of clients to federate. Each client in `clients` has the following variab
 - `name` : define the client name that will be used accross all the stack to identify the client, and to add filtering on queries.
 - `prometheus_federation`: a list of prometheuses servers to federate for this client. It allows to retrieve data metrics from specified prometheuses servers. Each federated prometheus in `prometheus_federation` has the following variables :
   - `name`: specify a name for this federated prometheus. It also adds a label `clusterID: <name>` for all metrics data retrieved from this prometheus server.
-  - `endpoint`: specify the prometheus endpoint to federate. The endpoint must be available from the tethys deployed prometheus that federates.
+  - `endpoint`: specify the prometheus endpoint to federate. The endpoint must be available from the tethys deployed prometheus that federates (e.g. http(s)://<url>:<port>).
+  - `username` : specify the username for basic_auth to request the endpoint.
+  - `password` : specify the password for basic_auth to request the endpoint.
   - `kubernetes_hosted`: specify if the prometheus endpoint is hosted on Kubernetes. If `true`, then it will also retrieve metrics data and create dashboards for this Kubernetes cluster.
 - `products`: a list of products the client has. It means the specified federated prometheus actually has metrics data for these products. For now, it only allows `node`, `kubernetes`, and `elasticsearch`.
 
@@ -56,7 +58,9 @@ clients:
     endpoint: prometheus-preprod-c1111.eu-west-1.elb.amazonaws.com:80
     kubernetes_hosted: true
   - name: prod
-    endpoint: prometheus-prod-c1111.eu-west-1.elb.amazonaws.com:80
+    endpoint: https://prometheus-prod-c1111.eu-west-1.elb.amazonaws.com:80
+    username: admin
+    password: p4ssw0rd
     kubernetes_hosted: true
   products:
   - node
