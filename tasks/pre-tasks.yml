@@ -2,7 +2,6 @@
 - name: pre-tasks| create temporary directory
   tempfile:
     state: directory
-    mode: 0750
   register: tmpdir
   delegate_to: localhost
   tags:
