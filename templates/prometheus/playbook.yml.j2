@@ -15,10 +15,19 @@
         labels:
           prometheusID: main
 {% for client in clients %}
-    - job_name: "{{ client.name }}"
+{% for prometheus in client.prometheus_federation %}
+    - job_name: "{{ client.name }}-{{ prometheus.name }}"
       scrape_interval: 60s
       honor_labels: true
       metrics_path: '/federate'
+{% if prometheus.username|default(false) and prometheus.password|default(false) %}
+      basic_auth:
+        username: "{{ prometheus.username }}"
+        password: "{{ prometheus.password }}"
+{% endif %}
+{% if (prometheus.endpoint).startswith('https://') %}
+      scheme: https
+{% endif %}
 {% if client.products|length > 0 %}
       params:
         'match[]':
@@ -42,13 +51,11 @@
         - '{job=~".+"}'
 {% endif %}
       static_configs:
-{% for prometheus in client.prometheus_federation %}
       - targets:
-        - "{{ prometheus.endpoint }}"
+        - "{{ prometheus.endpoint | regex_replace('^http(s){0,1}://(.+)', '\\2') }}"
         labels:
           clusterID: "{{ prometheus.name }}"
           clientID: "{{ client.name }}"
-{% endfor %}
 {% if 'kubernetes' in client.products or 'node' in client.products %}
       metric_relabel_configs:
 {% if 'node' in client.products %}
@@ -71,6 +78,7 @@
         replacement: kube-state-metrics
 {% endif %}
 {% endif %}
+{% endfor %}
 {% endfor %}
     prometheus_alert_rules_files:
     - "{{ tmpdir.path }}/prometheus/*.rules"
