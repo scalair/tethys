@@ -1,10 +1,23 @@
 ---
-- name: generate-rules| from template
+- name: generate-rules| standard rules from template
   template:
     src: prometheus/client.rules.j2
     dest: "{{ tmpdir.path }}/prometheus/{{ client.name }}.rules"
     mode: 0640
-  when: client.products |length > 0
+  when:
+    - client.products |length > 0
+    - (client.prometheus_rules |default([])) |length == 0
+  tags:
+    - generate-rules
+
+- name: generate-rules| custom rules from template
+  template:
+    src: prometheus/client-custom.rules.j2
+    dest: "{{ tmpdir.path }}/prometheus/{{ client.name }}.rules"
+    mode: 0640
+  when:
+    - client.products |length > 0
+    - (client.prometheus_rules |default([])) |length > 0
   tags:
     - generate-rules
 
