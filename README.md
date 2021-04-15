@@ -47,7 +47,7 @@ A list of clients to federate. Each client in `clients` has the following variab
   - `password` : specify the password for basic_auth to request the endpoint.
   - `kubernetes_hosted`: specify if the prometheus endpoint is hosted on Kubernetes. If `true`, then it will also retrieve metrics data and create dashboards for this Kubernetes cluster.
 - `products`: a list of products the client has. It means the specified federated prometheus actually has metrics data for these products. For now, it only allows `node`, `kubernetes`, and `elasticsearch`.
-- `prometheus_rules`: a list of custom prometheus rules to create for this client. Please note to use `!unsafe` keyword as prefix for every string that uses dollar sign `$` to avoid templating. By default, `prometheus_rules` is empty and standard rules will be applied for each defined `products`.
+- `prometheus_rules`: a list of custom prometheus rules based on [Prometheus 2.0 documentation](https://prometheus.io/docs/prometheus/latest/configuration/template_examples/), to create for this client. Please note to use `!unsafe` keyword as prefix for every string that uses dollar sign `$` to avoid templating. By default, `prometheus_rules` is empty and [standard rules](https://github.com/scalair/tethys/blob/dev/templates/prometheus/client.rules.j2) will be automatically applied for each defined `products`.
 
 _Example usage:_
 
