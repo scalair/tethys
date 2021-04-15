@@ -47,6 +47,7 @@ A list of clients to federate. Each client in `clients` has the following variab
   - `password` : specify the password for basic_auth to request the endpoint.
   - `kubernetes_hosted`: specify if the prometheus endpoint is hosted on Kubernetes. If `true`, then it will also retrieve metrics data and create dashboards for this Kubernetes cluster.
 - `products`: a list of products the client has. It means the specified federated prometheus actually has metrics data for these products. For now, it only allows `node`, `kubernetes`, and `elasticsearch`.
+- `prometheus_rules`: a list of custom prometheus rules to create for this client. Please note to use `!unsafe` keyword as prefix for every string that uses dollar sign `$` to avoid templating. By default, `prometheus_rules` is empty and standard rules will be applied for each defined `products`.
 
 _Example usage:_
 
@@ -72,6 +73,17 @@ clients:
     kubernetes_hosted: false
   products:
   - node
+  prometheus_rules:
+  - name: "c1337-node"
+    rules:
+    - alert: InstanceDown
+      annotations:
+        description: !unsafe '{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes.'
+        summary: !unsafe "Instance {{ $labels.instance }} down"
+      expr: 'up{clientID="c1111"} == 0'
+      for: 5m
+      labels:
+        severity: critical
 ```
 
 ### `alertmanager`
