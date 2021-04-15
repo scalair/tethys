@@ -59,6 +59,11 @@
 {% if 'kubernetes' in client.products or 'node' in client.products %}
       metric_relabel_configs:
 {% if 'node' in client.products %}
+      - source_labels: [ job,metrics_path,node ]
+        regex: ^kubelet;/metrics/cadvisor;(.+)$
+        action: replace
+        target_label: instance
+        replacement: "$1"
       - source_labels: [ job,kubernetes_name ]
         target_label: job
         regex: '^kubernetes-service-endpoints;prometheus-node-exporter$'
