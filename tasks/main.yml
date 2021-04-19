@@ -27,8 +27,8 @@
     name: cloudalchemy.grafana
   vars:
     grafana_security:
-      admin_user: admin
-      admin_password: admin
+      admin_user: "{{ grafana.username }}"
+      admin_password: "{{ grafana.password }}"
     grafana_datasources:
       - name: Prometheus
         type: prometheus

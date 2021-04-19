@@ -97,6 +97,18 @@ alertmanager:
   enabled: true
 ```
 
+### `grafana`
+
+You can manage Grafana's `user` (default: `admin`) and `password` (default: `tethys`) by setting them.
+
+_Example usage :_
+
+```yaml
+grafana:
+  username: admin
+  password: 4dm!npwd
+```
+
 ### `reverse_proxy`
 
 `reverse_proxy` has several variables :
