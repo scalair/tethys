@@ -117,7 +117,7 @@
           "tableColumn": "__name__",
           "targets": [
             {
-              "expr": "elasticsearch_cluster_health_status{instance=\"$instance\",cluster=\"$cluster\",color=\"red\",clientID=\"$clientID\"}==1 or (elasticsearch_cluster_health_status{instance=\"$instance\",cluster=\"$cluster\",color=\"green\",clientID=\"$clientID\"}==1)+4 or (elasticsearch_cluster_health_status{instance=\"$instance\",cluster=\"$cluster\",color=\"yellow\",clientID=\"$clientID\"}==1)+22",
+              "expr": "max(elasticsearch_cluster_health_status{color=\"green\",cluster=~\"$cluster\",clientID=\"$clientID\"}) + ON(cluster) max(elasticsearch_cluster_health_status{color=\"yellow\",cluster=~\"$cluster\",clientID=\"$clientID\"})* 2 + ON(cluster) max(elasticsearch_cluster_health_status{color=\"red\",cluster=~\"$cluster\",clientID=\"$clientID\"}) * 3",
               "format": "time_series",
               "instant": true,
               "intervalFactor": 2,
@@ -138,17 +138,17 @@
             {
               "op": "=",
               "text": "Green",
-              "value": "5"
+              "value": "1"
             },
             {
               "op": "=",
               "text": "Yellow",
-              "value": "3"
+              "value": "2"
             },
             {
               "op": "=",
               "text": "Red",
-              "value": "1"
+              "value": "3"
             }
           ],
           "valueName": "avg"
