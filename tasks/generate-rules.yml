@@ -21,7 +21,7 @@
   tags:
     - generate-rules
 
-- name: generate-rules| rules files directory
+- name: generate-rules| show rules files directory
   debug:
     msg: "Prometheus rules directory : {{ tmpdir.path }}/prometheus/"
   tags:
