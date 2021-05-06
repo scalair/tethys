@@ -594,7 +594,15 @@ groups:
       severity: warning
     annotations:
       summary: "{% raw %}Apache workers load (instance {{ $labels.instance }}){% endraw %}"
-      description: "{% raw %}Apache workers in busy state approach the max workers count 80% workers busy on {{ $labels.instance }}{% endraw %}"
+      description: "{% raw %}Apache workers in busy state approach the max workers count 80% workers busy on {{ $labels.instance }} for more than 5m{% endraw %}"
+  - alert: ApacheWorkersLoad
+    expr: '{% raw %}(sum by (instance) (apache_workers{state="busy",clientID="{% endraw %}{{ client.name }}{% raw %}"}) / sum by (instance) (apache_scoreboard{clientID="{% endraw %}{{ client.name }}{% raw %}"}) ) * 100 > 90{% endraw %}'
+    for: 1h
+    labels:
+      severity: critcal
+    annotations:
+      summary: "{% raw %}Apache workers load (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Apache workers in busy state approach the max workers count 90% workers busy on {{ $labels.instance }} for more than 1h{% endraw %}"
   - alert: ApacheFileDescriptor
     expr: '{% raw %}(sum by (instance) (process_open_fds{clientID="{% endraw %}{{ client.name }}{% raw %}",job="apache-exporter"}) / sum by (instance) (process_max_fds{clientID="{% endraw %}{{ client.name }}{% raw %}",job="apache-exporter"}) ) * 100 > 80{% endraw %}'
     for: 5m
@@ -603,4 +611,12 @@ groups:
     annotations:
       summary: "{% raw %}Apache file descriptor usage (instance {{ $labels.instance }}){% endraw %}"
       description: "{% raw %}Apache used file descriptor approach 80% of the max file descriptor on {{ $labels.instance }}.{% endraw %}"
+  - alert: ApacheFileDescriptor
+    expr: '{% raw %}(sum by (instance) (process_open_fds{clientID="{% endraw %}{{ client.name }}{% raw %}",job="apache-exporter"}) / sum by (instance) (process_max_fds{clientID="{% endraw %}{{ client.name }}{% raw %}",job="apache-exporter"}) ) * 100 > 90{% endraw %}'
+    for: 30m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Apache file descriptor usage (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Apache used file descriptor approach 90% of the max file descriptor on {{ $labels.instance }} for more than 30m.{% endraw %}"
 {% endif %}
