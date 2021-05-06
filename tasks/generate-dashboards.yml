@@ -36,3 +36,11 @@
   loop: "{{ client.prometheus_federation }}"
   loop_control:
     loop_var: clusterID
+
+- name: generate-dashboards| apache
+  template:
+    src: dashboards/apache.json.j2
+    dest: "{{ tmpdir.path }}/grafana/{{ client.name }}-apache.json"
+    mode: 0640
+  when: "'apache' in client.products"
+

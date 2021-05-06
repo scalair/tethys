@@ -45,6 +45,9 @@
 {% if 'elasticsearch' in client.products %}
         - '{job="elasticsearch-exporter"}'
 {% endif %}
+{% if 'apache' in client.products %}
+        - '{job="apache-exporter"}'
+{% endif %}
 {% else %}
       params:
         'match[]':
