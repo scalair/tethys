@@ -567,3 +567,40 @@ groups:
     labels:
       severity: critical
 {% endif %}
+
+{% if 'apache' in client.products %}
+- name: "{{ client.name }}-apache"
+  rules:
+  - alert: ApacheDown
+    annotations:
+      description: '{% raw %}Apache down on {{ $labels.instance }}. Job {{ $labels.job }}.{% endraw %}'
+      summary: "{% raw %}Apache down (instance {{ $labels.instance }}){% endraw %}"
+    expr: '{% raw %}apache_up{clientID="{% endraw %}{{ client.name }}{% raw %}"} == 0{% endraw %}'
+    for: 0m
+    labels:
+      severity: critical
+  - alert: ApacheRestart
+    expr: '{% raw %}apache_uptime_seconds_total{clientID="{% endraw %}{{ client.name }}{% raw %}"} / 60 < 1{% endraw %}'
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Apache restart (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Apache has just been restarted on instance {{ $labels.instance }}.{% endraw %}"
+  - alert: ApacheWorkersLoad
+    expr: '{% raw %}(sum by (instance) (apache_workers{state="busy",clientID="{% endraw %}{{ client.name }}{% raw %}"}) / sum by (instance) (apache_scoreboard{clientID="{% endraw %}{{ client.name }}{% raw %}"}) ) * 100 > 80{% endraw %}'
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Apache workers load (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Apache workers in busy state approach the max workers count 80% workers busy on {{ $labels.instance }}{% endraw %}"
+  - alert: ApacheFileDescriptor
+    expr: '{% raw %}(sum by (instance) (process_open_fds{clientID="{% endraw %}{{ client.name }}{% raw %}",job="apache-exporter"}) / sum by (instance) (process_max_fds{clientID="{% endraw %}{{ client.name }}{% raw %}",job="apache-exporter"}) ) * 100 > 80{% endraw %}'
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Apache file descriptor usage (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Apache used file descriptor approach 80% of the max file descriptor on {{ $labels.instance }}.{% endraw %}"
+{% endif %}
