@@ -37,3 +37,9 @@
           continue: true
           match_re:
             severity: error|critical
+    alertmanager_inhibits_rules:
+      - source_match:
+          severity: 'critical'
+        target_match:
+          severity: 'warning'
+        equal: ['alertname']
