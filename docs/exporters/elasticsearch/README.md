@@ -1,4 +1,4 @@
-# node exporter
+# elasticsearch exporter
 
 Prometheus exporter for various metrics about ElasticSearch.
 
