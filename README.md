@@ -2,42 +2,30 @@
 
 ![Apache 2.0 Licence](https://img.shields.io/hexpm/l/plug.svg) ![Ansible](https://img.shields.io/badge/ansible-2.10.x-green.svg)
 
-Ansible role that creates monitoring stack based on the well-known following products :
+**tethys** aims to **facilitate the integration of monitoring stack** using the well-known [Prometheus](https://prometheus.io/), [Grafana](https://grafana.com/) and [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/), in order to **monitor several products** (node, kubernetes, apache, elasticsearch, etc).
 
-- prometheus
-- grafana
-- alertmanager
+We also provide a **[collection of Prometheus exporters](docs/exporters/README.md)** that collects metrics for several products.
 
-The resulting Prometheus server is planned to **federate others Prometheuses servers**. [More information about Prometheus federation](https://prometheus.io/docs/prometheus/latest/federation/).
+Here is an overview :
+
+![overview](docs/medias/overview.svg)
 
 ## Why tethys
 
-- simplify Prometheuses servers federation
-- add glue between Prometheus, Grafana and AlertManager in order to get a stack that just work from scratch
-- provides custom dashboards for well-known products, such as :
-  - node : monitor any VM/instances (cloud-based or on-prem)
-  - elasticsearch : monitor elasticsearch clusters
-  - kubernetes : monitor k8s clusters, and its workloads
-- simplify multi-tenant configuration
+Because we are used to integrating monitoring stacks for our clients, we have concluded several things :
+
+- there are a ton of Prometheus exporters in the community, even for the same product. So, it is hard an boring to choose the good one. **We provide a list of Prometheus exporters for each product you want to monitor, that just works with our stack.**
+- there are a ton of Grafana dashboars in the community, even for the same product. It is hard an boring to choose the good one. **We provide Grafana dashboards for each product you want to monitor, that just works with our stack.**
+- glue between Prometheus exporters, Prometheus servers, Prometheus federation server, Grafana and Alertmanager is a complex task and requires a certain expertise to be maintained. **We've decided to add an abstraction layer to facilitate the integration and the glue.**
+- because we had a monitoring stack for each customer which operated independently, it was becoming complicated on a daily basis to consult and maintain the stack of each customer. **tethys provides a simplified customer-centric view, and simplify multi-tenant configuration of the stack.**
+
+For all these reasons, we decided to create tethys.
 
 ## Prerequisites
 
-### For federated Prometheuses servers
+- ![ansible](https://img.shields.io/badge/ansible-2.10.x-green.svg)
 
-Because metrics datas retrieved from federated prometheuses servers must have the expected structure for each product, we **highly recommand** to install the exporters from the following list :
-
-|Exporter|Platform|Provisioning Tool|Repo|Description|
-|-|-|-|-|-|
-|node-exporter|VM, instances, etc.|ansible|<https://galaxy.ansible.com/cloudalchemy/node-exporter>|Install node-exporter on classic instance or virtual machines|
-|node-exporter|Kubernetes|helm|<https://prometheus-community.github.io/helm-charts>|Install node-exporter as Kubernetes `DaemonSet` to monitor Kubernetes cluster nodes.|
-|kube-state-metrics|Kubernetes|helm|<https://prometheus-community.github.io/helm-charts>|Install state-metrics for Kubernetes cluster.|
-|cadvisor|Kubernetes|helm|<https://artifacthub.io/packages/helm/ckotzbauer/cadvisor>|Install cadvisor for in-depth metrics in Kubernetes workloads.|
-|elasticsearch-exporter|VM, instances, etc.|ansible|<https://galaxy.ansible.com/lyr/elasticsearch_exporter>|Install elasticsearch-exporter on classic instance or virtual machines|
-|elasticsearch-exporter|Kubernetes|helm|<https://artifacthub.io/packages/helm/prometheus-community/prometheus-elasticsearch-exporter>|Install elasticsearch-exporter within Kubernetes.|
-|apache-exporter|VM, instances, etc.|ansible|<https://galaxy.ansible.com/idealista/apache_exporter-role>|Install apache-exporter on classic instance or virtual machines.|
-
-
-## Variables
+## Usage
 
 ### `clients`
 
