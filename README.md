@@ -137,7 +137,7 @@ reverse_proxy:
 
 ## Versioning
 
-For the versions available, see the [tags on this repository](https://github.com/Xat59/tethys/tags).
+For the versions available, see the [tags on this repository](https://github.com/scalair/tethys/tags).
 
 Additionaly you can see what change in each version in the [CHANGELOG.md](CHANGELOG.md) file.
 
