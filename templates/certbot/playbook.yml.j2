@@ -7,6 +7,7 @@
   vars:
     certbot_admin_email: "{{ reverse_proxy.email }}"
     certbot_create_if_missing: true
+    certbot_auto_renew_options: "--pre-hook 'systemctl stop apache2' --post-hook 'systemctl start apache2'"
     certbot_create_standalone_stop_services:
     - apache2
     certbot_certs:
